@@ -1,61 +1,61 @@
+from flask import Flask,render_template, request, redirect
 import os.path
 from os import path
-from flask import Flask, render_template, request
 
-app=Flask(__name__)
+global whichfilename;
+whichfilename = "pdinfo.doc";
+app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
-
+@app.route("/")
 def main():
-    if request.method == 'GET':
-        return render_template('AskInfo.html')
-    else:
-        GetInfo()
-        return render_template('AskInfo.html')
+    return render_template("GetInformation.html");
 
-@app.route('/info', methods=['GET', 'POST'])
+@app.route("/info",methods=["POST"])
 def GetInfo():
-    global username,userpassword;
+    global username, userpasswd;
 
-    username=request.form.get('txtusername')
-    userpassword=request.form.get('txtuserpassword')
-    
-    while True:
-        if (username=="" or userpassword==""):
-            return render_template('AskInfo.html', valid="Please enter all information.")
+    username = request.form.get("txtusername");
+    userpasswd = request.form.get("txtpassword");
 
-    FileConnectivity()
-    
-    fileinfo=open(filename, "r")
-    userinfo=fileinfo.read(),split(",")
-    fileinfo.close();
-
-    username=userinfo[0].strip();
-    userpassword=userinfo[1].strip();
-    
-
-
-    
-    return render_template('Output.html', username=username, password=userpassword)
-
-
-def FileConnectivity():
-    global exist, filename
-    filename = "userinfo.txt"
-    fileDir = os.path.dirname(os.path.realpath("__file__"))
-    fileexist = bool(path.exists(filename))
-    if (fileexist == True):
-        WriteFile()
+    if(username == "" or userpasswd == ""):
+        return render_template("GetInformation.html");
     else:
-        pythfile = open(filename, "x")
-        pythfile.close();
-        WriteFile()
+        CreateCheckFile();
+        RetrieveInfo();
+        return render_template("output.html", username = fileusername, password = fileuserpwd);
 
-def WriteFile():
-    pythfile = open(filename, "w")
-    pythfile.write(username + "," + userpassword)
-    pythfile.close();
+def CreateCheckFile():
+    fileDir = os.path.dirname(os.path.realpath("__file__"));
+    fileexist = bool(path.exists(whichfilename));
 
+    if (fileexist == False):
+        status = "new";
+    else:
+        status = "edit";
+
+    WriteToFile(status);
+
+def WriteToFile(whichstatus):
+    if (whichstatus == "new"):
+        logacctfile = open(whichfilename,"x");
+        logacctfile.close();
+        logacctfile = open(whichfilename,"w");
+    else:
+        logacctfile = open(whichfilename,"a");
+
+    logacctfile.write(str(username) + ", " + str(userpasswd));
+    logacctfile.close();
+
+def RetrieveInfo():
+    global fileusername, fileuserpwd;
+    
+    logacctfile = open(whichfilename,"r");
+    infologin = logacctfile.read().split(",");
+    logacctfile.close();
+
+    fileusername = infologin[0].strip();
+    fileuserpwd = infologin[1].strip();
+    
 if __name__ == "__main__":
-    app.run()
- 
+    app.run();
+
