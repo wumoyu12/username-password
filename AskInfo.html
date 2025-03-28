@@ -1,20 +1,28 @@
 <html>
 	<head>
-		<title>AskInfo</title>
+		<title>Collect Information</title>
+		<link rel="stylesheet" href="\static\AskInfo.css">
+		<script src="\static\GetInfo.js"></script>
 	</head>
 
 	<body>
 		<h1>Input the following information</h1>
 		<form action="/info" method="post">
-			<label id="lblusername">User Name:</label>
-			<input type="text" name="txtusername"><br>
-
-			<label id="lblusername">Password:</label>
-			<input type="text" name="txtpassword"><br>
-
-			<label id="lblvalid">{{valid}}</label><br>
-
-			<button type="submit">Submit</button>
+			<div id="login">
+				<table id="tbllogin">
+					<tr>
+						<td><label id="lblusername">Username:</label>
+						<td><input id="txtusername" name="txtusername" ></input>
+					</tr>
+					<tr>
+						<td><label id="lblpassword">Password:</label>
+						<td><input id="txtpassword" name="txtpassword" ></input>
+					</tr>
+					<tr>
+						<td><button id="btnsubmit">Submit</button>
+					</tr>
+				</table>
+			<div>				
 		</form>
 	</body>
 </html>
